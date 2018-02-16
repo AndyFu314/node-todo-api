@@ -1,4 +1,5 @@
-const MongoClient = require('mongodb').MongoClient;
+// const MongoClient = require('mongodb').MongoClient;
+const {MongoClient, ObjectID} = require('mongodb');
 
 const url = 'mongodb://localhost:27017';
 const dbName = 'TodoApp';
@@ -30,7 +31,7 @@ MongoClient.connect(url, (err, client) => {
             return console.log('Unable to insert user', err);
         }
 
-        console.log(JSON.stringify(result.ops, undefined, 2));
+        console.log(JSON.stringify(result.ops[0]._id, undefined, 2));
     })
 
     client.close();
