@@ -18,7 +18,6 @@ app.post('/todos', (req, res) => {
     todo.save().then((result) => {
         res.send(200, result);
     }, (e) => {
-        console.log(e);
         res.send(400, `Unable to add todo: ${e}`);
     });
 });
@@ -26,3 +25,5 @@ app.post('/todos', (req, res) => {
 app.listen(3000, () => {
     console.log('Started on port 3000!!');
 });
+
+module.exports = {app};
