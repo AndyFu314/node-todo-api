@@ -6,38 +6,51 @@ mongoose.connect('mongodb://localhost:27017/TodoApp123');
 
 var todoSchema = new Schema({
     text: {
-        type: String
+        type: String,
+        required: true,
+        minlength: 1,
+        trim: true
     },
     completed: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     completedAt: {
-        type: Number
+        type: Number,
+        default: null
     }
 }, {
     collection: 'Todo123'
 });
 
+var userSchema = new Schema({
+    email: {
+        type: String,
+        required: true,
+        minlength: 1,
+        trim: true
+    }
+})
+
 var Todo = mongoose.model('Todo', todoSchema);
+var User = mongoose.model('User', userSchema);
 
-var newTodo = new Todo({
-    text: 'Cook dinner'
+// var otherTodo = new Todo({
+//     text: '  Edit this code  '
+// });
+
+// otherTodo.save().then((doc) => {
+//     console.log(JSON.stringify(doc, undefined, 2));
+// }, (e) => {
+//     console.log('Unable to save:', e);
+// });
+
+var user = new User({
+    name: 'Andy',
+    email: 'andy.fu@udngroup.com.tw   '
 });
-
-newTodo.save().then((doc) => {
-    console.log('Saved todo', doc);
+user.save().then((doc) => {
+    console.log('Added user', doc);
 }, (e) => {
-    console.log('Unable to save todo: ', e);
-});
-
-var otherTodo = new Todo({
-    text: 'Feed the dog',
-    completed: true,
-    completedAt: 123
-});
-
-otherTodo.save().then((doc) => {
-    console.log(JSON.stringify(doc, undefined, 2));
-}, (e) => {
-    console.log('Unable to save:', e);
+    console.log('Unable to add user: ', e);
 });
