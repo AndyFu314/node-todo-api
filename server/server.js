@@ -36,7 +36,7 @@ app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
     if (!ObjectID.isValid(id)) {
-        return res.send(400, `The user Id: ${id} is invalid`);
+        return res.send(400, `The todo Id: ${id} is invalid`);
     }
     Todo.findById(id).then((todo) => {
         if (!todo) {
@@ -46,8 +46,25 @@ app.get('/todos/:id', (req, res) => {
         res.send(200, {todo});
     }).catch((e) => {
         res.send(400, `Unable to fecth todo: ${e}`);
-    })
-})
+    });
+});
+
+app.delete('/todos/:id', (req, res) => {
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(400).send(`The todo Id: ${id} is invalid`);
+    }
+    Todo.findByIdAndRemove(id).then((todo) => {
+        if (!todo) {
+            return res.status(400).send('Todo not found');
+        }
+
+        res.send(`Todo has been removed: ${todo}`);
+    }).catch((e) => {
+        res.status(400).send(`Unable to delete todo: ${e}`);
+    });
+});
 
 app.listen(port, () => {
     console.log(`Started on port ${port}!!`);
