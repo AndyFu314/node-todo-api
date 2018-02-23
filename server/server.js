@@ -60,7 +60,7 @@ app.delete('/todos/:id', (req, res) => {
             return res.status(400).send('Todo not found');
         }
 
-        res.send(`Todo has been removed: ${todo}`);
+        res.send({todo});
     }).catch((e) => {
         res.status(400).send(`Unable to delete todo: ${e}`);
     });
