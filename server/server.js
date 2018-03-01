@@ -21,9 +21,9 @@ app.post('/todos', (req, res) => {
     });
 
     todo.save().then((result) => {
-        res.send(200, result);
+        res.send(result);
     }, (e) => {
-        res.send(400, `Unable to add todo: ${e}`);
+        res.status(400).send(`Unable to add todo: ${e}`);
     });
 });
 
@@ -39,16 +39,16 @@ app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
     if (!ObjectID.isValid(id)) {
-        return res.send(400, `The todo Id: ${id} is invalid`);
+        return res.status(400).send(`The todo Id: ${id} is invalid`);
     }
     Todo.findById(id).then((todo) => {
         if (!todo) {
-         return res.send(400, 'Todo not found');
+         return res.status(400).send('Todo not found');
         }
 
-        res.send(200, {todo});
+        res.send({todo});
     }).catch((e) => {
-        res.send(400, `Unable to fecth todo: ${e}`);
+        res.status(400).send(`Unable to fecth todo: ${e}`);
     });
 });
 
