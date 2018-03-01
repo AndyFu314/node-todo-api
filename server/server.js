@@ -1,6 +1,7 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 
 var {mongoose, Schema} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo.js');
@@ -26,7 +27,7 @@ app.post('/todos', (req, res) => {
 
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
-        res.send(200, {todos});
+        res.send({todos});
     }, (e) => {
         res.send(400, `Unable to fetch todo: ${e}`);
     })
@@ -63,6 +64,32 @@ app.delete('/todos/:id', (req, res) => {
         res.send({todo});
     }).catch((e) => {
         res.status(400).send(`Unable to delete todo: ${e}`);
+    });
+});
+
+app.patch('/todos/:id', (req, res) => {
+    var id = req.params.id;
+    var body = _.pick(req.body, ['text', 'completed']);
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(400).send(`The todo Id: ${id} is invalid`);
+    }
+
+    if (_.isBoolean(body.completed) && body.completed) {
+        body.completedAt = new Date().getTime();
+    } else {
+        body.completedAt = null;
+        body.completed = false;
+    }
+
+    Todo.findByIdAndUpdate(id, {$set:body}, {new: true}).then((todo) => {
+        if (!todo) {
+            return res.status(400).send('Todo not found');
+        }
+
+        res.send({todo});
+    }).catch((e) => {
+        res.status(400).send(`Unable to update todo: ${e}`);
     });
 });
 
