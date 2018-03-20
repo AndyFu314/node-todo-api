@@ -4,23 +4,11 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('../server.js');
 const {Todo} = require('../models/todo.js');
-
-const dummyTodos = [{
-    _id: new ObjectID(),
-    text: 'First todo for test case'
-}, {
-    _id: new ObjectID(),
-    text: 'Second todo for test case',
-    completed: true,
-    completedAt: 777
-}];
+const {dummyUsers, populateUsers, dummyTodos, populateTodos} = require('./seed/seed');
 
 // remove all data before testing then add two dummy document
-beforeEach((done) => {
-    Todo.remove({}).then(() => {
-        return Todo.insertMany(dummyTodos);
-    }).then(() => done());
-});
+beforeEach(populateUsers);
+beforeEach(populateTodos);
 
 describe('POST /todos', () => {
     it('should create a new todo', (done) => {
