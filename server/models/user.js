@@ -55,16 +55,20 @@ UserSchema.methods.generateAuthToken = function() {
 
 UserSchema.methods.removeToken = function(token) {
     var user = this;
-
-    return user.update({
-        $pull: {
-            tokens: {
-                token
-                // Reomve all tokens
-                //$exists: true
-            }
+    
+    for (let i = 0; i < user.tokens.length; i++) {
+        if (user.tokens[i].token === token) {
+            return user.update({
+                $pull: {
+                    tokens: {
+                        $exists: true
+                    }
+                }
+            });
         }
-    });
+    }
+    
+    return Promise.reject();
 };
 
 UserSchema.statics.findByToken = function(token) {
