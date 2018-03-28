@@ -14,6 +14,10 @@ var todoSchema = new Schema({
     completedAt: {
         type: Number,
         default: null
+    },
+    _creatorId: {
+        type: Schema.Types.ObjectId,
+        required: true
     }
 }, {
     collection: 'Todo123'
